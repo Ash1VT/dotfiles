@@ -1,0 +1,165 @@
+#### APPS LAUNCHING ####
+
+super + d
+	rofi -show drun
+
+super + {_,shift + }Return
+	{alacritty, bspc node -s biggest.local}
+
+@Print
+	flameshot gui -p /home/ash1vt/Screenshots -c
+
+#shift + @Print
+#	scrot -d 5
+
+super + n
+        thunar
+
+super + v
+	virt-manager
+
+super + b
+	blender
+
+super + i
+	inkscape
+
+super + l
+	lutris
+
+
+#### BSPWM CONTROL ####
+
+# CLOSE OR KILL WINDOW
+super + {_, shift + }c
+	bspc node -{c}
+
+# RESTART CONFIG SXHKD
+super + e
+        pkill -USR1 -x sxhkd
+
+# EXIT OR RESTART BSPWM
+super + shift + {q,r}
+        bspc {quit,wm -r} & pkill -USR1 -x alacritty & pkill -USR1 -x cbatticon
+
+# SWITCH MONOCLE MODE
+super + m
+	bspc desktop -l next
+
+# CHANGE SELECTED AND THE BIGGEST WINDOW
+super + g
+	bspc node -s biggest.window
+
+
+
+#### FLAG CONTROL ####
+
+# CHANGE WINDOW STATUS ON TILED/PSEUDO_TILED/FLOATING/FULLSCREEN
+super + {t,shift + t,s,f}
+	bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
+
+# SET NODE FLAG ON MARKED/LOCKED/STICKY/PRIVATE
+super + ctrl + {m,x,y,z}
+	bspc node -g {marked,locked,sticky,private}
+
+
+
+#### FOCUS CONTROL####
+
+# MOVE WINDOW
+super + {_,shift + }{Left,Down,Up,Right}
+	bspc node -{f,s} {west,south,north,east}
+
+# CHOOSE SOME APPS
+super + {p,b,comma,period}
+	bspc node -f @{parent,brother,first,second}
+
+#ПЕРЕКЛЮЧЕНИЕ ПО ОТКРЫТЫМ ПРИЛОЖЕНИЯМ В ПРЕДЕЛАХ ОДНОГО ВОРКСПЕЙСА
+super + {_,shift + }q
+	bspc node -f {next,prev}.local.!hidden.window
+
+#ПЕРЕХОД ПО ВОРКСПЕЙСАМ
+super + bracket{left,right}
+	bspc desktop -f {prev,next}.local
+
+#ВЕРНУТСЯ НА ПРЕДЫДУЩИЙ АКТИВНЫЙ ВОРКСПЕЙС
+super + {grave,Tab}
+	bspc {node,desktop} -f last
+
+#ПЕРЕХОД НА ПО ИСТОРИИ ОТКРЫТЫХ ПРИЛОЖЕНИЙ
+super + {o,i}
+	bspc wm -h off; \
+	bspc node {older,newer} -f; \
+	bspc wm -h on
+
+#ПЕРЕКЛЮЧИТСЯ НА ВОРКСПЕЙС ИЛИ ПЕРЕТАЩИТЬ НА НЕГО АКТИВНОЕ ОКНО
+super + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+
+
+###########################################
+####       ПРЕДВАРИТЕЛЬНЫМ ВЫБОР       ####
+###########################################
+
+#ВЫБРАТЬ НАПРАВЛЕНИЕ В КОТОРОМ ОТКРОЕТСЯ НОВОЕ ОКНО
+super + ctrl + {h,j,k,l}
+	bspc node -p {west,south,north,east}
+
+#ВЫБРАТЬ ВОРКСПЕЙС НА КОТОРОМ ОТКРОЕТСЯ НОВОЕ ОКНО
+super + ctrl + {1-9}
+	bspc node -o 0.{1-9}
+
+#ОТМЕНИТЬ НАПРАВЛЕНИЕ В КОТОРОМ ОТКРОЕТСЯ НОВОЕ ОКНО
+super + ctrl + space
+	bspc node -p cancel
+
+#ОТМЕНИТЬ ВОРКСПЕЙС НА КОТОРОМ ОТКРОЕТСЯ НОВОЕ ОКНО
+super + ctrl + shift + space
+	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+
+
+
+###########################################
+####   ПЕРЕМЕЩЕНИЕ/ИЗМЕНЕНИЕ РАЗМЕРА   ####
+###########################################
+
+# i3 like resizing
+alt + h
+    $HOME/.local/bin/shrinkx.sh
+alt + l
+    $HOME/.local/bin/expandx.sh
+alt + k
+    $HOME/.local/bin/shrinky.sh
+alt + j
+    $HOME/.local/bin/expandy.sh
+
+#ПЕРЕМЕЩЕНИЕ ПЛАВАЮЩИХ ОКОН
+super + shift + {h,j,k,l}
+	bspc node -v {-10 0,0 10,0 -10,10 0}
+
+###########################################
+####        WALLPAPER SWITCHER         ####
+###########################################
+
+
+# NEXT
+super + alt + Right
+    bgctl next
+
+# PREV
+super + alt + Left
+    bgctl prev
+
+
+#AUDIO
+XF86AudioRaiseVolume
+        amixer set Master 5%+
+XF86AudioLowerVolume
+        amixer set Master 5%-
+XF86AudioMute
+        amixer set Master {mute, unmute}
+
+#BRIGHTNESS
+XF86MonBrightness{Up,Down} 
+	brightnessctl set 10%{+,-}
